@@ -3,7 +3,7 @@ h1 {
   font-family: sans-serif;
   font-size: 24px;
   font-weight: 300;
-  padding: 50px 0 20px;
+  padding: 20px 0 10px;
   text-align: center;
 }
 
@@ -12,7 +12,8 @@ h2 {
   font-family: sans-serif;
   font-size: 18px;
   font-weight: 300;
-  padding-top: 20px;
+  padding: 0;
+  margin: 8px 0 4px;
 }
 
 button {
@@ -27,12 +28,17 @@ button:hover {
   background: #fbfbf0;
 }
 
+button.fill-missing-colors {
+  display: block;
+  margin: 0 auto;
+}
+
 input[type="color"] {
 	-webkit-appearance: none;
 	border: none;
   border-radius: 50%;
-	width: 80px;
-	height: 80px;
+	width: 50px;
+	height: 50px;
 }
 
 input[type="color"]::-webkit-color-swatch-wrapper {
@@ -48,7 +54,7 @@ input[type="color"]::-webkit-color-swatch {
 .color-container {
   display: block;
   margin: 0 auto;
-  width: 600px;
+  width: 500px;
 }
 
 .color-picker-container {
@@ -63,9 +69,9 @@ input[type="color"]::-webkit-color-swatch {
 .primary-color {
   border-radius: 50%;
   border: 1px solid rgb(177, 175, 193);
-  height: 80px;
+  height: 50px;
   margin-left: 20px;
-  width: 80px;
+  width: 50px;
 }
 
 .color-variation-container {
@@ -76,18 +82,18 @@ input[type="color"]::-webkit-color-swatch {
 .color-variation {
   border-radius: 50%;
   border: 1px solid rgb(177, 175, 193);
-  height: 80px;
+  height: 50px;
   margin-left: 20px;
-  width: 80px;
+  width: 50px;
 }
 
 #palette {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   column-gap: 10px;
-  margin: 80px auto;
+  margin: 50px auto;
   row-gap: 10px;
-  height: 280px;
+  height: 250px;
   width: 600px;
 }
 

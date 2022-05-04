@@ -4,7 +4,7 @@ window.addEventListener("load", function() {
 });
 
 function initializeVariationButtons() {
-  const buttons = document.querySelectorAll("button");
+  const buttons = document.querySelectorAll(".color-container button");
 
   for (const button of buttons) {
     button.addEventListener("click", applyVariations);
