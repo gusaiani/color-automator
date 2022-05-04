@@ -1,13 +1,39 @@
 window.addEventListener("load", function() {
-  const colorPicker = document.getElementById("colorPicker");
+  const buttons = document.querySelectorAll("button");
 
-  colorPicker.addEventListener("change", event => {
-    const color = event.target.value;
-    const transformedColor = chroma(color)
-      .darken()
-      .hex();
-
-    const firstDiv = document.querySelectorAll("#palette div")[0];
-    firstDiv.style.backgroundColor = transformedColor;
-  });
+  for (const button of buttons) {
+    button.addEventListener("click", applyVariations);
+  }
 });
+
+function applyVariations(event) {
+  const colorContainer = event.target.closest(".color-picker-container");
+
+  const pickedColor = colorContainer.querySelector("input[type='color']").value;
+
+  paintVariations(pickedColor, colorContainer);
+}
+
+function paintVariations(color, colorContainer) {
+  const [darkerVariation, lighterVariation] = defineVariations(color);
+
+  const [
+    firstVariationContainer,
+    secondVariationContainer
+  ] = colorContainer.querySelectorAll(".color-variation");
+
+  firstVariationContainer.style.backgroundColor = darkerVariation;
+  secondVariationContainer.style.backgroundColor = lighterVariation;
+}
+
+function defineVariations(color) {
+  const darker = chroma(color)
+    .darken(0.5)
+    .hex();
+
+  const lighter = chroma(color)
+    .brighten(0.5)
+    .hex();
+
+  return [darker, lighter];
+}
