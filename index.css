@@ -56,6 +56,18 @@ input[type="color"]::-webkit-color-swatch {
   justify-content: space-between;
 }
 
+.primary-color-container {
+  display: flex;
+}
+
+.primary-color {
+  border-radius: 50%;
+  border: 1px solid rgb(177, 175, 193);
+  height: 80px;
+  margin-left: 20px;
+  width: 80px;
+}
+
 .color-variation-container {
   display: flex;
   align-items: center;
