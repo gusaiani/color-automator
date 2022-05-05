@@ -51,6 +51,28 @@ input[type="color"]::-webkit-color-swatch {
   border-radius: 50%;
 }
 
+#app {
+  display: flex;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#color-bar {
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  margin-left: 60px;
+  width: 80px;
+  height: calc(100vh - 200px);
+}
+
+
+#color-bar div {
+  border-bottom: 1px solid #eee;
+  flex: 1;
+}
+
 .color-container {
   display: block;
   margin: 0 auto;
