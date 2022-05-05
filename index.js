@@ -108,14 +108,7 @@ function fillPrimaryColorsFromOnePrimary() {
   const newPrimaryColors = [...primaryColorDivs].reduce(
     (acc, primaryColorDiv, index) => {
       const firstColor = primaryColorDivs[0].style.backgroundColor;
-      const newColor =
-        index === 0
-          ? firstColor
-          : chroma(firstColor)
-              .set("hsl.h", String(index * -45))
-              .set("hsl.l", 0.8)
-              .set("hsl.s", 0.4)
-              .hex();
+      const newColor = setPrimaryColor(firstColor, index);
       acc.push(newColor);
 
       return acc;
@@ -126,6 +119,32 @@ function fillPrimaryColorsFromOnePrimary() {
   primaryColorDivs.forEach((primaryColorDiv, index) => {
     primaryColorDiv.style.backgroundColor = newPrimaryColors[index];
   });
+}
+
+function setPrimaryColor(firstColor, index) {
+  if (index === 0) return firstColor;
+
+  let newColor = chroma(firstColor)
+    .set("hsl.h", String(index * -45))
+    .set("hsl.l", 0.8)
+    .set("hsl.s", 0.4)
+    .hex();
+
+  const newHue = chroma(newColor).get("hsl.h");
+
+  // Saturate redish hues
+  if (newHue >= 345 && newHue <= 365) {
+    console.log("Hue in redish range", newHue);
+    newColor = chroma(newColor).set("hsl.s", 0.55);
+  }
+
+  // Push color wheel for cyanish hues
+  if (newHue >= 120 && newHue <= 135) {
+    console.log("Hue in cyanish range", newHue);
+    newColor = chroma(newColor).set("hsl.h", newHue + 30);
+  }
+
+  return newColor;
 }
 
 function fillAllVariations() {
