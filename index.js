@@ -1,8 +1,19 @@
 window.addEventListener("load", function() {
+  fillFirstColorRandomly();
   initializeVariationButtons();
   initializeColorPickers();
   initializeFillMissingColors();
 });
+
+function fillFirstColorRandomly() {
+  const color = chroma.random();
+  const [firstColorInput] = document.querySelectorAll("input[type=color]");
+  const [firstPrimaryColorContainer] = document.querySelectorAll(
+    ".primary-color"
+  );
+  firstColorInput.value = color;
+  firstPrimaryColorContainer.style.backgroundColor = color;
+}
 
 function initializeVariationButtons() {
   const buttons = document.querySelectorAll(".color-container button");
@@ -72,6 +83,24 @@ function initializeFillMissingColors() {
 }
 
 function onClickFillMissingColors(event) {
+  const filledPrimaryColors = detectFilledPrimaryColors();
+
+  if (filledPrimaryColors.length === 1) {
+    fillPrimaryColorsFromOnePrimary();
+  } else {
+    throw "Number of filled primaries not yet covered";
+  }
+}
+
+function detectFilledPrimaryColors() {
+  const primaryColors = document.querySelectorAll(".primary-color");
+
+  return [...primaryColors]
+    .map(primaryColor => primaryColor.style.backgroundColor)
+    .filter(_ => _);
+}
+
+function fillPrimaryColorsFromOnePrimary() {
   const [
     firstColorContainer,
     secondColorContainer,
@@ -82,6 +111,7 @@ function onClickFillMissingColors(event) {
     seventhColorContainer,
     eighthColorContainer
   ] = document.querySelectorAll(".primary-color");
+
   const firstColor = firstColorContainer.style.backgroundColor;
 
   const secondColor = chroma(firstColor).set("hsl.h", "-45");
