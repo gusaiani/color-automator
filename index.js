@@ -113,6 +113,8 @@ function fillPrimaryColorsFromOnePrimary() {
           ? firstColor
           : chroma(firstColor)
               .set("hsl.h", String(index * -45))
+              .set("hsl.l", 0.8)
+              .set("hsl.s", 0.4)
               .hex();
       acc.push(newColor);
 
