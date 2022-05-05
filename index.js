@@ -139,7 +139,7 @@ function setPrimaryColor(
     .hex();
 
   newColor = maybeAvoidSimilarHue(newColor, presetAndAutofilledPrimaryColors);
-  newColor = maybeSaturateRedishHues(newColor);
+  newColor = maybeSaturateYellowishHues(newColor);
   newColor = maybePushColorWheelForCyanishHues(newColor);
 
   return newColor;
@@ -170,11 +170,11 @@ function getHues(colors) {
   return colors.map(getHue);
 }
 
-function maybeSaturateRedishHues(color) {
+function maybeSaturateYellowishHues(color) {
   const newHue = getHue(color);
 
-  if (newHue >= 345 && newHue <= 365) {
-    return chroma(color).set("hsl.s", 0.55);
+  if (newHue >= 30 && newHue <= 45) {
+    return chroma(color).set("hsl.s", 0.71);
   }
 
   return color;
@@ -184,7 +184,6 @@ function maybePushColorWheelForCyanishHues(color) {
   const newHue = getHue(color);
 
   if (newHue >= 120 && newHue <= 135) {
-    console.log("🚀", "is Cyanish", color);
     return chroma(color).set("hsl.h", newHue + 15);
   }
 
