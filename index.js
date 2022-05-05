@@ -101,51 +101,69 @@ function detectFilledPrimaryColors() {
 function fillPrimaryColors() {
   const primaryColorDivs = document.querySelectorAll(".primary-color");
 
-  const primaryColors = [...primaryColorDivs]
+  const presetPrimaryColors = [...primaryColorDivs]
     .map(primaryColorDiv => {
       return primaryColorDiv.style.backgroundColor;
     })
     .filter(_ => _);
 
-  const numberOfPrimariesToAutofill =
-    primaryColorDivs.length - primaryColors.length;
+  const presetAndAutofilledPrimaryColors = [...presetPrimaryColors];
 
-  const firstColor = primaryColorDivs[0].style.backgroundColor;
+  const numberOfPrimariesToAutofill =
+    primaryColorDivs.length - presetPrimaryColors.length;
 
   for (let i = 0; i < numberOfPrimariesToAutofill; i++) {
-    const newColor = setPrimaryColor(firstColor, i + 1);
-    primaryColors.push(newColor);
+    const newColor = setPrimaryColor(
+      presetPrimaryColors,
+      presetAndAutofilledPrimaryColors,
+      i + 1
+    );
+    presetAndAutofilledPrimaryColors.push(newColor);
   }
 
   primaryColorDivs.forEach((primaryColorDiv, index) => {
-    primaryColorDiv.style.backgroundColor = primaryColors[index];
+    primaryColorDiv.style.backgroundColor =
+      presetAndAutofilledPrimaryColors[index];
   });
 }
 
-function setPrimaryColor(firstColor, index) {
-  if (index === 0) return firstColor;
-
-  let newColor = chroma(firstColor)
+function setPrimaryColor(
+  presetPrimaryColors,
+  presetAndAutofilledPrimaryColors,
+  index
+) {
+  let newColor = chroma(presetPrimaryColors[0])
     .set("hsl.h", String(index * -45))
     .set("hsl.l", 0.8)
     .set("hsl.s", 0.4)
     .hex();
 
-  const newHue = chroma(newColor).get("hsl.h");
-
-  // Saturate redish hues
-  if (newHue >= 345 && newHue <= 365) {
-    console.log("Hue in redish range", newHue);
-    newColor = chroma(newColor).set("hsl.s", 0.55);
-  }
-
-  // Push color wheel for cyanish hues
-  if (newHue >= 120 && newHue <= 135) {
-    console.log("Hue in cyanish range", newHue);
-    newColor = chroma(newColor).set("hsl.h", newHue + 30);
-  }
+  newColor = maybeSaturateRedishHues(newColor);
+  newColor = maybePushColorWheelForCyanishHues(newColor);
 
   return newColor;
+}
+
+function maybeSaturateRedishHues(color) {
+  const newHue = chroma(color).get("hsl.h");
+
+  if (newHue >= 345 && newHue <= 365) {
+    console.log("Hue in redish range", newHue);
+    return chroma(color).set("hsl.s", 0.55);
+  }
+
+  return color;
+}
+
+function maybePushColorWheelForCyanishHues(color) {
+  const newHue = chroma(color).get("hsl.h");
+
+  if (newHue >= 120 && newHue <= 135) {
+    console.log("Hue in cyanish range", newHue);
+    return chroma(color).set("hsl.h", newHue + 30);
+  }
+
+  return color;
 }
 
 function fillAllVariations() {
