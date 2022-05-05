@@ -88,6 +88,7 @@ function onClickFillMissingColors(event) {
   if (filledPrimaryColors.length === 1) {
     fillPrimaryColorsFromOnePrimary();
     fillAllVariations();
+    fillColorBar();
   } else {
     throw "Number of filled primaries not yet covered";
   }
@@ -138,4 +139,36 @@ function fillAllVariations() {
   for (const button of buttons) {
     applyVariations(button);
   }
+}
+
+function fillColorBar() {
+  const allSetColors = getAllSetColors();
+  const colorBar = document.querySelector("#color-bar");
+
+  allSetColors.forEach(color => {
+    const div = document.createElement("div");
+    div.style.backgroundColor = color;
+    colorBar.appendChild(div);
+  });
+}
+
+function getAllSetColors() {
+  const colorPickerContainers = document.querySelectorAll(
+    ".color-picker-container"
+  );
+
+  return [...colorPickerContainers].map(getPrimaryAndVariations).flat();
+}
+
+function getPrimaryAndVariations(colorPickerContainer) {
+  const primaryColor = colorPickerContainer.querySelector(".primary-color")
+    .style.backgroundColor;
+  const [variationDiv1, variationDiv2] = colorPickerContainer.querySelectorAll(
+    ".color-variation"
+  );
+
+  const variation1 = variationDiv1.style.backgroundColor;
+  const variation2 = variationDiv2.style.backgroundColor;
+
+  return [variation1, primaryColor, variation2];
 }
