@@ -85,13 +85,9 @@ function initializeFillMissingColors() {
 function onClickFillMissingColors(event) {
   const filledPrimaryColors = detectFilledPrimaryColors();
 
-  if (filledPrimaryColors.length === 1) {
-    fillPrimaryColorsFromOnePrimary();
-    fillAllVariations();
-    fillColorBar();
-  } else {
-    throw "Number of filled primaries not yet covered";
-  }
+  fillPrimaryColors();
+  fillAllVariations();
+  fillColorBar();
 }
 
 function detectFilledPrimaryColors() {
@@ -102,22 +98,27 @@ function detectFilledPrimaryColors() {
     .filter(_ => _);
 }
 
-function fillPrimaryColorsFromOnePrimary() {
+function fillPrimaryColors() {
   const primaryColorDivs = document.querySelectorAll(".primary-color");
 
-  const newPrimaryColors = [...primaryColorDivs].reduce(
-    (acc, primaryColorDiv, index) => {
-      const firstColor = primaryColorDivs[0].style.backgroundColor;
-      const newColor = setPrimaryColor(firstColor, index);
-      acc.push(newColor);
+  const primaryColors = [...primaryColorDivs]
+    .map(primaryColorDiv => {
+      return primaryColorDiv.style.backgroundColor;
+    })
+    .filter(_ => _);
 
-      return acc;
-    },
-    []
-  );
+  const numberOfPrimariesToAutofill =
+    primaryColorDivs.length - primaryColors.length;
+
+  const firstColor = primaryColorDivs[0].style.backgroundColor;
+
+  for (let i = 0; i < numberOfPrimariesToAutofill; i++) {
+    const newColor = setPrimaryColor(firstColor, i + 1);
+    primaryColors.push(newColor);
+  }
 
   primaryColorDivs.forEach((primaryColorDiv, index) => {
-    primaryColorDiv.style.backgroundColor = newPrimaryColors[index];
+    primaryColorDiv.style.backgroundColor = primaryColors[index];
   });
 }
 
