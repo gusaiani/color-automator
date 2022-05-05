@@ -184,7 +184,7 @@ function maybePushColorWheelForCyanishHues(color) {
   const newHue = getHue(color);
 
   if (newHue >= 120 && newHue <= 135) {
-    return chroma(color).set("hsl.h", newHue + 15);
+    return chroma(color).set("hsl.h", newHue + 10);
   }
 
   return color;
