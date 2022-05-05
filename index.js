@@ -19,7 +19,7 @@ function initializeVariationButtons() {
   const buttons = document.querySelectorAll(".color-container button");
 
   for (const button of buttons) {
-    button.addEventListener("click", applyVariations);
+    button.addEventListener("click", event => applyVariations(event.target));
   }
 }
 
@@ -31,8 +31,8 @@ function initializeColorPickers() {
   }
 }
 
-function applyVariations(event) {
-  const colorContainer = event.target.closest(".color-picker-container");
+function applyVariations(primaryColor) {
+  const colorContainer = primaryColor.closest(".color-picker-container");
 
   const pickedColor = colorContainer.querySelector(".primary-color").style
     .backgroundColor;
@@ -87,6 +87,7 @@ function onClickFillMissingColors(event) {
 
   if (filledPrimaryColors.length === 1) {
     fillPrimaryColorsFromOnePrimary();
+    fillAllVariations();
   } else {
     throw "Number of filled primaries not yet covered";
   }
@@ -129,4 +130,12 @@ function fillPrimaryColorsFromOnePrimary() {
   sixthColorContainer.style.backgroundColor = sixthColor;
   seventhColorContainer.style.backgroundColor = seventhColor;
   eighthColorContainer.style.backgroundColor = eighthColor;
+}
+
+function fillAllVariations() {
+  const buttons = document.querySelectorAll(".color-container button");
+
+  for (const button of buttons) {
+    applyVariations(button);
+  }
 }
