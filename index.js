@@ -138,17 +138,42 @@ function setPrimaryColor(
     .set("hsl.s", 0.4)
     .hex();
 
+  newColor = maybeAvoidSimilarHue(newColor, presetAndAutofilledPrimaryColors);
   newColor = maybeSaturateRedishHues(newColor);
   newColor = maybePushColorWheelForCyanishHues(newColor);
 
   return newColor;
 }
 
+function maybeAvoidSimilarHue(color, existingColors) {
+  const hue = getHue(color);
+  const existingHues = getHues(existingColors);
+
+  const isHueSimilarToExistingHue = checkIfHueIsSimilarToExistingHues(
+    hue,
+    existingHues
+  );
+
+  return color;
+}
+
+function checkIfHueIsSimilarToExistingHues(hue, existingHues) {
+  console.log({ hue, existingHues });
+  return false;
+}
+
+function getHue(color) {
+  return chroma(color).get("hsl.h");
+}
+
+function getHues(colors) {
+  return colors.map(getHue);
+}
+
 function maybeSaturateRedishHues(color) {
-  const newHue = chroma(color).get("hsl.h");
+  const newHue = getHue(color);
 
   if (newHue >= 345 && newHue <= 365) {
-    console.log("Hue in redish range", newHue);
     return chroma(color).set("hsl.s", 0.55);
   }
 
@@ -156,10 +181,9 @@ function maybeSaturateRedishHues(color) {
 }
 
 function maybePushColorWheelForCyanishHues(color) {
-  const newHue = chroma(color).get("hsl.h");
+  const newHue = getHue(color);
 
   if (newHue >= 120 && newHue <= 135) {
-    console.log("Hue in cyanish range", newHue);
     return chroma(color).set("hsl.h", newHue + 30);
   }
 
