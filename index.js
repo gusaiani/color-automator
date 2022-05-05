@@ -6,7 +6,7 @@ window.addEventListener("load", function() {
 });
 
 function fillFirstColorRandomly() {
-  const color = chroma.random();
+  const color = chroma.hex("5C2FA0");
   const [firstColorInput] = document.querySelectorAll("input[type=color]");
   const [firstPrimaryColorContainer] = document.querySelectorAll(
     ".primary-color"
@@ -133,9 +133,9 @@ function setPrimaryColor(
   index
 ) {
   let newColor = chroma(presetPrimaryColors[0])
-    .set("hsl.h", String(index * -45))
-    .set("hsl.l", 0.8)
-    .set("hsl.s", 0.4)
+    .set("hsl.h", "+" + String(index * 45))
+    .set("hsl.l", 0.65)
+    .set("hsl.s", 0.71)
     .hex();
 
   newColor = maybeAvoidSimilarHue(newColor, presetAndAutofilledPrimaryColors);
@@ -158,7 +158,7 @@ function maybeAvoidSimilarHue(color, existingColors) {
 }
 
 function checkIfHueIsSimilarToExistingHues(hue, existingHues) {
-  console.log({ hue, existingHues });
+  // console.log({ hue, existingHues });
   return false;
 }
 
@@ -184,7 +184,8 @@ function maybePushColorWheelForCyanishHues(color) {
   const newHue = getHue(color);
 
   if (newHue >= 120 && newHue <= 135) {
-    return chroma(color).set("hsl.h", newHue + 30);
+    console.log("🚀", "is Cyanish", color);
+    return chroma(color).set("hsl.h", newHue + 15);
   }
 
   return color;
