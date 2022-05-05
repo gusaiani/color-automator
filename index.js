@@ -1,3 +1,6 @@
+const MINIMUM_LIGHTNESS = 0.3;
+const MAXIMUM_LIGHTNESS = 0.7;
+
 window.addEventListener("load", function() {
   fillFirstColorRandomly();
   initializeVariationButtons();
@@ -134,10 +137,10 @@ function setPrimaryColor(
 ) {
   let newColor = chroma(presetPrimaryColors[0])
     .set("hsl.h", "+" + String(index * 45))
-    .set("hsl.l", 0.65)
     .set("hsl.s", 0.71)
     .hex();
 
+  newColor = constrainLightness(newColor);
   newColor = maybeAvoidSimilarHue(newColor, presetAndAutofilledPrimaryColors);
   newColor = maybeSaturateYellowishHues(newColor);
   newColor = maybePushColorWheelForCyanishHues(newColor);
@@ -145,6 +148,17 @@ function setPrimaryColor(
   return newColor;
 }
 
+function constrainLightness(color) {
+  let lightness = chroma(color).get("hsl.l");
+
+  if (lightness > MAXIMUM_LIGHTNESS) {
+    lightness = MAXIMUM_LIGHTNESS;
+  } else if (lightness < MINIMUM_LIGHTNESS) {
+    lightness = MINIMUM_LIGHTNESS;
+  }
+
+  return chroma(color).set("hsl.l", lightness);
+}
 function maybeAvoidSimilarHue(color, existingColors) {
   const hue = getHue(color);
   const existingHues = getHues(existingColors);
@@ -201,6 +215,8 @@ function fillAllVariations() {
 function fillColorBar() {
   const allSetColors = getAllSetColors();
   const colorBar = document.querySelector("#color-bar");
+
+  colorBar.replaceChildren();
 
   allSetColors.forEach(color => {
     const div = document.createElement("div");
