@@ -1,3 +1,6 @@
+const MINIMUM_LIGHTNESS_FOR_VARIATION = 0.3;
+const MAXIMUM_LIGHTNESS_FOR_VARIATION = 0.8;
+
 window.addEventListener("load", function() {
   initializeVariationButtons();
 });
@@ -22,18 +25,27 @@ function applyVariations(primaryColor) {
 }
 
 function paintVariations(color, colorContainer) {
-  const [darkerVariation, lighterVariation] = defineVariations(color);
+  const [firstVariation, secondVariation] = defineVariations(color);
 
   const [
     firstVariationContainer,
     secondVariationContainer
   ] = colorContainer.querySelectorAll(".color-variation");
 
-  firstVariationContainer.style.backgroundColor = darkerVariation;
-  secondVariationContainer.style.backgroundColor = lighterVariation;
+  firstVariationContainer.style.backgroundColor = firstVariation;
+  secondVariationContainer.style.backgroundColor = secondVariation;
 }
 
 function defineVariations(color) {
+  const [
+    isColorOutsideLightnessRange,
+    tooLightOrTooDark
+  ] = checkIfColorIsOutsideLightnessRange(color);
+
+  if (isColorOutsideLightnessRange) {
+    return customizeVariationsForLightnessRange(color, tooLightOrTooDark);
+  }
+
   const darker = chroma(color)
     .darken(0.5)
     .hex();
@@ -43,4 +55,53 @@ function defineVariations(color) {
     .hex();
 
   return [darker, lighter];
+}
+
+function checkIfColorIsOutsideLightnessRange(color) {
+  const isColorTooLight = checkIfColorIsTooLight(color);
+
+  if (isColorTooLight) {
+    return [true, "light"];
+  }
+
+  const isColorTooDark = checkIfColorIsTooDark(color);
+
+  if (isColorTooDark) {
+    return [true, "dark"];
+  }
+
+  return [false, null];
+}
+
+function checkIfColorIsTooLight(color) {
+  let lightness = chroma(color).get("hsl.l");
+  return lightness > MAXIMUM_LIGHTNESS_FOR_VARIATION;
+}
+
+function checkIfColorIsTooDark(color) {
+  let lightness = chroma(color).get("hsl.l");
+  return lightness < MINIMUM_LIGHTNESS_FOR_VARIATION;
+}
+
+function customizeVariationsForLightnessRange(color, tooLightOrTooDark) {
+  if (tooLightOrTooDark === "light") {
+    return [
+      chroma(color)
+        .darken(0.6)
+        .hex(),
+      chroma(color)
+        .darken(0.9)
+        .hex()
+    ];
+  } else {
+    console.log("Here");
+    return [
+      chroma(color)
+        .brighten(0.6)
+        .hex(),
+      chroma(color)
+        .brighten(0.9)
+        .hex()
+    ];
+  }
 }
