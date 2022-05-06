@@ -1,5 +1,6 @@
 const MINIMUM_LIGHTNESS = 0.3;
 const MAXIMUM_LIGHTNESS = 0.7;
+const HUE_SIMILARITY_THRESHOLD = 20;
 
 window.addEventListener("load", function() {
   fillFirstColorRandomly();
@@ -7,13 +8,22 @@ window.addEventListener("load", function() {
 });
 
 function fillFirstColorRandomly() {
-  const color = chroma.hex("5C2FA0");
-  const [firstColorInput] = document.querySelectorAll("input[type=color]");
-  const [firstPrimaryColorContainer] = document.querySelectorAll(
-    ".primary-color"
+  const firstColor = chroma.hex("5C2FA0");
+  const secondColor = chroma.hex("FFF700");
+
+  const [firstColorInput, secondColorInput] = document.querySelectorAll(
+    "input[type=color]"
   );
-  firstColorInput.value = color;
-  firstPrimaryColorContainer.style.backgroundColor = color;
+  const [
+    firstPrimaryColorContainer,
+    secondPrimaryColorContainer
+  ] = document.querySelectorAll(".primary-color");
+
+  firstColorInput.value = firstColor;
+  firstPrimaryColorContainer.style.backgroundColor = firstColor;
+
+  secondColorInput.value = secondColor;
+  secondPrimaryColorContainer.style.backgroundColor = secondColor;
 }
 
 function initializeFillMissingColors() {
@@ -71,13 +81,20 @@ function setPrimaryColor(
   presetAndAutofilledPrimaryColors,
   index
 ) {
-  let newColor = chroma(presetPrimaryColors[0])
-    .set("hsl.h", "+" + String(index * 45))
+  let newColor = chroma(
+    presetPrimaryColors[(index - 1) % presetPrimaryColors.length]
+  )
+    .set(
+      "hsl.h",
+      "+" +
+        String(Math.floor((index - 1) / presetPrimaryColors.length + 1) * 45)
+      // "+" + String(index * 45)
+    )
     .set("hsl.s", 0.71)
     .hex();
 
   newColor = constrainLightness(newColor);
-  newColor = maybeAvoidSimilarHue(newColor, presetAndAutofilledPrimaryColors);
+  newColor = avoidSimilarHue(newColor, presetAndAutofilledPrimaryColors);
   newColor = maybeSaturateYellowishHues(newColor);
   newColor = maybePushColorWheelForCyanishHues(newColor);
 
@@ -96,21 +113,31 @@ function constrainLightness(color) {
   return chroma(color).set("hsl.l", lightness);
 }
 
-function maybeAvoidSimilarHue(color, existingColors) {
-  const hue = getHue(color);
+function avoidSimilarHue(color, existingColors) {
+  let hue = getHue(color);
   const existingHues = getHues(existingColors);
 
-  const isHueSimilarToExistingHue = checkIfHueIsSimilarToExistingHues(
+  let isHueSimilarToExistingHue = checkIfHueIsSimilarToExistingHues(
     hue,
     existingHues
   );
 
-  return color;
+  while (isHueSimilarToExistingHue) {
+    hue += 45;
+
+    isHueSimilarToExistingHue = checkIfHueIsSimilarToExistingHues(
+      hue,
+      existingHues
+    );
+  }
+
+  return chroma(color).set("hsl.h", hue);
 }
 
 function checkIfHueIsSimilarToExistingHues(hue, existingHues) {
-  // console.log({ hue, existingHues });
-  return false;
+  return existingHues.some(
+    existingHue => Math.abs(existingHue - hue) < HUE_SIMILARITY_THRESHOLD
+  );
 }
 
 function getHue(color) {
