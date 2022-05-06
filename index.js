@@ -68,7 +68,6 @@ function setPrimaryColor(
       "hsl.h",
       "+" +
         String(Math.floor((index - 1) / presetPrimaryColors.length + 1) * 45)
-      // "+" + String(index * 45)
     )
     .set("hsl.s", 0.71)
     .hex();
