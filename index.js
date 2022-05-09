@@ -123,6 +123,10 @@ function getHue(color) {
   return chroma(color).get("hsl.h");
 }
 
+function getLightness(color) {
+  return chroma(color).get("hsl.l");
+}
+
 function getHues(colors) {
   return colors.map(getHue);
 }

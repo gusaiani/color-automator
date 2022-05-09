@@ -58,7 +58,10 @@ function defineVariations(color) {
 }
 
 function checkIfColorIsOutsideLightnessRange(color) {
-  const isColorTooLight = checkIfColorIsTooLight(color);
+  const isColorTooLight =
+    checkIfYellowAndLightish(color) ||
+    checkIfCyanAndLightish(color) ||
+    checkIfColorIsTooLight(color);
 
   if (isColorTooLight) {
     return [true, "light"];
@@ -71,6 +74,28 @@ function checkIfColorIsOutsideLightnessRange(color) {
   }
 
   return [false, null];
+}
+
+function checkIfYellowAndLightish(color) {
+  const hue = getHue(color);
+  const lightness = getLightness(color);
+
+  if (hue >= 40 && hue <= 60 && lightness > 0.4) {
+    return true;
+  }
+
+  return false;
+}
+
+function checkIfCyanAndLightish(color) {
+  const hue = getHue(color);
+  const lightness = getLightness(color);
+
+  if (hue >= 165 && hue <= 180 && lightness > 0.4) {
+    return true;
+  }
+
+  return false;
 }
 
 function checkIfColorIsTooLight(color) {
