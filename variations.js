@@ -99,12 +99,12 @@ function checkIfCyanAndLightish(color) {
 }
 
 function checkIfColorIsTooLight(color) {
-  let lightness = chroma(color).get("hsl.l");
+  let lightness = getLightness(color);
   return lightness > MAXIMUM_LIGHTNESS_FOR_VARIATION;
 }
 
 function checkIfColorIsTooDark(color) {
-  let lightness = chroma(color).get("hsl.l");
+  const lightness = getLightness(color);
   return lightness < MINIMUM_LIGHTNESS_FOR_VARIATION;
 }
 

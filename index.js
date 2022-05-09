@@ -81,7 +81,7 @@ function setPrimaryColor(
 }
 
 function constrainLightness(color) {
-  let lightness = chroma(color).get("hsl.l");
+  let lightness = getLightness(color);
 
   if (lightness > MAXIMUM_LIGHTNESS) {
     lightness = MAXIMUM_LIGHTNESS;
