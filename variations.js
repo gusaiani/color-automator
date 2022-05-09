@@ -58,6 +58,11 @@ function defineVariations(color) {
 }
 
 function checkIfColorIsOutsideLightnessRange(color) {
+  const isColorYellowAndLight = checkIfYellowAndLightish(color);
+  if (isColorYellowAndLight) {
+    return [true, "yellowAndLight"];
+  }
+
   const isColorTooLight =
     checkIfYellowAndLightish(color) ||
     checkIfCyanAndLightish(color) ||
@@ -109,7 +114,16 @@ function checkIfColorIsTooDark(color) {
 }
 
 function customizeVariationsForLightnessRange(color, tooLightOrTooDark) {
-  if (tooLightOrTooDark === "light") {
+  if (tooLightOrTooDark === "yellowAndLight") {
+    return [
+      chroma(color)
+        .darken(0.9)
+        .hex(),
+      chroma(color)
+        .darken(1.2)
+        .hex()
+    ];
+  } else if (tooLightOrTooDark === "light") {
     return [
       chroma(color)
         .darken(0.6)
