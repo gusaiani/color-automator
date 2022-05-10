@@ -117,10 +117,10 @@ function customizeVariationsForLightnessRange(color, tooLightOrTooDark) {
   if (tooLightOrTooDark === "yellowAndLight") {
     return [
       chroma(color)
-        .darken(0.9)
+        .darken(0.5)
         .hex(),
       chroma(color)
-        .darken(1.2)
+        .darken(1.0)
         .hex()
     ];
   } else if (tooLightOrTooDark === "light") {

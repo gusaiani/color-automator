@@ -190,5 +190,7 @@ function getPrimaryAndVariations(colorPickerContainer) {
   const variation1 = variationDiv1.style.backgroundColor;
   const variation2 = variationDiv2.style.backgroundColor;
 
-  return [variation1, primaryColor, variation2];
+  return [variation1, primaryColor, variation2].sort(
+    (color1, color2) => getLightness(color1) < getLightness(color2)
+  );
 }
